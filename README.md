@@ -1,5 +1,8 @@
 # Ascnd GameMaker SDK
 
+> [!WARNING]
+> This project is experimental and under active development. Expect bugs, breaking changes, and incomplete features. Please report issues via the [issue tracker](../../issues).
+
 Official GameMaker SDK for [Ascnd](https://ascnd.gg) - the leaderboard API for game developers.
 
 ## Features
