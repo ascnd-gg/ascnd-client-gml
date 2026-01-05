@@ -1,0 +1,26 @@
+# GameMaker
+*.yy.json
+*.resource_order
+/Configs/
+/datafiles/
+/options/
+/rooms/
+/sounds/
+/sprites/
+/tilesets/
+/fonts/
+*.yyc
+*.zip
+*.yyz
+
+# Build output
+*.yymps
+
+# IDE
+.vs/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
