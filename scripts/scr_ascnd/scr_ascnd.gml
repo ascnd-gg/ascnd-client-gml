@@ -1,6 +1,6 @@
 /// @description Ascnd Leaderboard SDK for GameMaker
 /// @author Ascnd (https://ascnd.gg)
-/// @version 1.1.0
+/// @version 1.1.1
 
 // ============================================================================
 // INITIALIZATION

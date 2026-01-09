@@ -35,7 +35,7 @@
 4. Fill in package details:
    - **Display Name:** Ascnd Leaderboard SDK
    - **Package ID:** com.ascnd.leaderboard-sdk
-   - **Version:** 1.0.0
+   - **Version:** 1.1.1
    - **Author:** Ascnd
    - **Description:** Official SDK for integrating Ascnd leaderboards into your game
 5. Click **OK** and save as `ascnd-sdk.yymps`
