@@ -127,20 +127,36 @@ function fetch_leaderboard() {
     }, 10); // Get top 10
 }
 
-/// Example: Fetch with pagination
-function fetch_leaderboard_page(page_number) {
+/// Example: Fetch with cursor-based pagination
+/// First call: cursor = undefined (fetches first page)
+/// Subsequent calls: pass the next_cursor from previous response
+function fetch_leaderboard_page(cursor) {
     var entries_per_page = 10;
-    var offset = page_number * entries_per_page;
 
     ascnd_get_leaderboard(global.leaderboard_id, {
         on_success: function(response) {
             global.leaderboard_entries = response.entries;
+            // Store next_cursor for loading more pages
+            if (response.has_more) {
+                global.next_cursor = response.next_cursor;
+            } else {
+                global.next_cursor = undefined;
+            }
             show_debug_message("Page loaded with " + string(array_length(response.entries)) + " entries");
         },
         on_error: function(error) {
             show_debug_message("Error: " + error.message);
         }
-    }, entries_per_page, offset);
+    }, entries_per_page, cursor);
+}
+
+/// Example: Load next page (call after initial fetch_leaderboard_page(undefined))
+function fetch_next_page() {
+    if (global.next_cursor != undefined) {
+        fetch_leaderboard_page(global.next_cursor);
+    } else {
+        show_debug_message("No more pages to load");
+    }
 }
 
 /// Example: Fetch previous period (e.g., last week's scores)
@@ -153,7 +169,7 @@ function fetch_previous_leaderboard() {
         on_error: function(error) {
             show_debug_message("Error: " + error.message);
         }
-    }, 10, 0, "previous");
+    }, 10, undefined, "previous");
 }
 
 

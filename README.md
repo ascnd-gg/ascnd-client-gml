@@ -131,18 +131,19 @@ Submit a score to a leaderboard.
 }
 ```
 
-### ascnd_get_leaderboard(leaderboard_id, [callbacks], [limit], [offset], [period], [view_slug])
+### ascnd_get_leaderboard(leaderboard_id, [callbacks], [limit], [cursor], [period], [view_slug], [around_rank])
 
-Get leaderboard entries.
+Get leaderboard entries with cursor-based pagination for O(1) performance.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `leaderboard_id` | string | The leaderboard ID |
 | `callbacks` | struct | (Optional) `{ on_success, on_error }` functions |
 | `limit` | real | (Optional) Max entries to return (1-100). Default: 10 |
-| `offset` | real | (Optional) Pagination offset. Default: 0 |
+| `cursor` | string | (Optional) Cursor from previous response's `next_cursor` for pagination |
 | `period` | string | (Optional) `"current"`, `"previous"`, or ISO 8601 timestamp |
 | `view_slug` | string | (Optional) Filter by metadata view |
+| `around_rank` | real | (Optional) Jump to a specific rank position |
 
 **Success Response:**
 ```gml
@@ -153,9 +154,31 @@ Get leaderboard entries.
     ],
     total_entries: 1500,
     has_more: true,
+    next_cursor: "eyJzY29yZSI6OTUwMCwicGxheWVyX2lkIjoicGxheWVyXzIifQ==",
     period_start: "2024-01-01T00:00:00Z",
     period_end: "2024-02-01T00:00:00Z"
 }
+```
+
+**Pagination Example:**
+```gml
+// First page
+ascnd_get_leaderboard("lb_abc", {
+    on_success: function(response) {
+        show_leaderboard(response.entries);
+        if (response.has_more) {
+            // Store cursor for next page
+            global.next_cursor = response.next_cursor;
+        }
+    }
+}, 10);
+
+// Load next page using cursor
+ascnd_get_leaderboard("lb_abc", {
+    on_success: function(response) {
+        show_leaderboard(response.entries);
+    }
+}, 10, global.next_cursor);
 ```
 
 ### ascnd_get_player_rank(leaderboard_id, player_id, [callbacks], [period], [view_slug])

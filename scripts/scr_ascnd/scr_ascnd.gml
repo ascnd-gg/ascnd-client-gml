@@ -61,21 +61,25 @@ function ascnd_submit_score(leaderboard_id, player_id, score, callbacks = undefi
     return __ascnd_request("ascnd.v1.AscndService/SubmitScore", body, callbacks);
 }
 
-/// @function ascnd_get_leaderboard(leaderboard_id, [callbacks], [limit], [offset], [period], [view_slug])
-/// @description Get leaderboard entries
+/// @function ascnd_get_leaderboard(leaderboard_id, [callbacks], [limit], [cursor], [period], [view_slug], [around_rank])
+/// @description Get leaderboard entries with cursor-based pagination
 /// @param {string} leaderboard_id The leaderboard ID
 /// @param {struct} [callbacks] Optional struct with on_success and on_error functions
 /// @param {real} [limit] Maximum entries to return (1-100, default 10)
-/// @param {real} [offset] Offset for pagination (default 0)
+/// @param {string} [cursor] Cursor for keyset pagination (from previous response's next_cursor)
 /// @param {string} [period] Period filter: "current", "previous", or ISO 8601 timestamp
 /// @param {string} [view_slug] Optional view slug for filtered leaderboards
+/// @param {real} [around_rank] Jump to a specific rank position (alternative to cursor for random access)
 /// @returns {real} The request ID for tracking
-function ascnd_get_leaderboard(leaderboard_id, callbacks = undefined, limit = 10, offset = 0, period = undefined, view_slug = undefined) {
+function ascnd_get_leaderboard(leaderboard_id, callbacks = undefined, limit = 10, cursor = undefined, period = undefined, view_slug = undefined, around_rank = undefined) {
     var body = {
         leaderboard_id: leaderboard_id,
-        limit: limit,
-        offset: offset
+        limit: limit
     };
+
+    if (cursor != undefined) {
+        body.cursor = cursor;
+    }
 
     if (period != undefined) {
         body.period = period;
@@ -83,6 +87,10 @@ function ascnd_get_leaderboard(leaderboard_id, callbacks = undefined, limit = 10
 
     if (view_slug != undefined) {
         body.view_slug = view_slug;
+    }
+
+    if (around_rank != undefined) {
+        body.around_rank = around_rank;
     }
 
     return __ascnd_request("ascnd.v1.AscndService/GetLeaderboard", body, callbacks);
